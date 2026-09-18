@@ -10,6 +10,7 @@
     '<path d="M10 12H22V25H21V13H10V12Z" fill="currentColor"/>' +
     "</svg>";
 
+  var BRAND_PRIMARY = "#031e2f";
   var ARBOGA_CENTRUM = [59.3939, 15.8388];
   var SCRIPT_BASE = (function () {
     var script = document.currentScript;
@@ -27,11 +28,11 @@
       .replace(/"/g, "&quot;");
   }
 
-  function resolveAreasUrl(root) {
-    var custom = root.getAttribute("data-areas-url");
+  function resolveUrl(root, attr, fallbackFile) {
+    var custom = root.getAttribute(attr);
     if (custom) return custom;
-    if (SCRIPT_BASE) return new URL("areas.json", SCRIPT_BASE).href;
-    return "areas.json";
+    if (SCRIPT_BASE) return new URL(fallbackFile, SCRIPT_BASE).href;
+    return fallbackFile;
   }
 
   function markerHtml(area) {
@@ -77,7 +78,44 @@
     });
   }
 
-  function initMap(root, areas) {
+  function fetchJson(url) {
+    return fetch(url).then(function (res) {
+      if (!res.ok) throw new Error("HTTP " + res.status + " for " + url);
+      return res.json();
+    });
+  }
+
+  function addWaterLayer(map, waterGeojson) {
+    if (!waterGeojson) return null;
+    return L.geoJSON(waterGeojson, {
+      interactive: false,
+      style: {
+        color: BRAND_PRIMARY,
+        weight: 0.5,
+        opacity: 0.35,
+        fillColor: BRAND_PRIMARY,
+        fillOpacity: 0.42,
+      },
+    }).addTo(map);
+  }
+
+  function addKommunLayer(map, kommunGeojson) {
+    if (!kommunGeojson) return null;
+    return L.geoJSON(kommunGeojson, {
+      interactive: false,
+      style: {
+        color: BRAND_PRIMARY,
+        weight: 2,
+        opacity: 0.55,
+        fillColor: BRAND_PRIMARY,
+        fillOpacity: 0.08,
+        lineJoin: "round",
+        lineCap: "round",
+      },
+    }).addTo(map);
+  }
+
+  function initMap(root, areas, kommunGeojson, waterGeojson) {
     var canvas = root.querySelector("[data-arboga-map-canvas]");
     if (!canvas) {
       throw new Error("Missing [data-arboga-map-canvas] element");
@@ -95,6 +133,9 @@
       maxZoom: 19,
     }).addTo(map);
 
+    addWaterLayer(map, waterGeojson);
+    var kommunLayer = addKommunLayer(map, kommunGeojson);
+
     var bounds = L.latLngBounds([ARBOGA_CENTRUM]);
     var group = L.featureGroup();
 
@@ -105,13 +146,21 @@
     });
 
     group.addTo(map);
+
+    if (kommunLayer) {
+      try {
+        bounds.extend(kommunLayer.getBounds());
+      } catch (e) {
+        /* ignore empty bounds */
+      }
+    }
+
     map.fitBounds(bounds, {
-      paddingTopLeft: [48, 96],
+      paddingTopLeft: [48, 48],
       paddingBottomRight: [48, 48],
       maxZoom: 11,
     });
 
-    // Recalculate size after fonts/layout settle (Webflow embeds often need this)
     setTimeout(function () {
       map.invalidateSize();
     }, 100);
@@ -138,18 +187,30 @@
       return;
     }
 
-    var url = resolveAreasUrl(root);
-    fetch(url)
-      .then(function (res) {
-        if (!res.ok) throw new Error("Kunde inte hämta områdesdata (" + res.status + ")");
-        return res.json();
-      })
-      .then(function (areas) {
+    var areasUrl = resolveUrl(root, "data-areas-url", "areas.json");
+    var kommunUrl = resolveUrl(root, "data-kommun-url", "arboga-kommun.geojson");
+    var waterUrl = resolveUrl(root, "data-water-url", "arboga-water.geojson");
+
+    Promise.all([
+      fetchJson(areasUrl),
+      fetchJson(kommunUrl).catch(function (err) {
+        console.warn("[arboga-tomter-map] kommun boundary", err);
+        return null;
+      }),
+      fetchJson(waterUrl).catch(function (err) {
+        console.warn("[arboga-tomter-map] water layer", err);
+        return null;
+      }),
+    ])
+      .then(function (results) {
+        var areas = results[0];
+        var kommun = results[1];
+        var water = results[2];
         if (!Array.isArray(areas) || !areas.length) {
           throw new Error("Inga områden att visa");
         }
         hideStatus(root);
-        initMap(root, areas);
+        initMap(root, areas, kommun, water);
       })
       .catch(function (err) {
         console.error("[arboga-tomter-map]", err);
