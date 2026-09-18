@@ -106,12 +106,11 @@
       interactive: false,
       style: {
         color: BRAND_PRIMARY,
-        weight: 3,
-        opacity: 0.75,
+        weight: 0,
+        opacity: 0,
         fillColor: BRAND_PRIMARY,
         fillOpacity: 0.12,
-        lineJoin: "round",
-        lineCap: "round",
+        stroke: false,
       },
     }).addTo(map);
   }
