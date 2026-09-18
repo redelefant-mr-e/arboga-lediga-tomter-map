@@ -11,6 +11,7 @@
     "</svg>";
 
   var BRAND_PRIMARY = "#031e2f";
+  var WATER_FILL = "#031e2f";
   var ARBOGA_CENTRUM = [59.3939, 15.8388];
   var SCRIPT_BASE = (function () {
     var script = document.currentScript;
@@ -90,11 +91,11 @@
     return L.geoJSON(waterGeojson, {
       interactive: false,
       style: {
-        color: BRAND_PRIMARY,
+        color: WATER_FILL,
         weight: 0,
         opacity: 0,
-        fillColor: BRAND_PRIMARY,
-        fillOpacity: 0.55,
+        fillColor: WATER_FILL,
+        fillOpacity: 0.62,
       },
     }).addTo(map);
   }
@@ -105,10 +106,10 @@
       interactive: false,
       style: {
         color: BRAND_PRIMARY,
-        weight: 2.5,
-        opacity: 0.7,
+        weight: 3,
+        opacity: 0.75,
         fillColor: BRAND_PRIMARY,
-        fillOpacity: 0.1,
+        fillOpacity: 0.12,
         lineJoin: "round",
         lineCap: "round",
       },
@@ -147,17 +148,18 @@
 
     group.addTo(map);
 
+    var fitTarget = bounds;
     if (kommunLayer) {
       try {
-        bounds.extend(kommunLayer.getBounds());
+        var kb = kommunLayer.getBounds();
+        if (kb.isValid()) fitTarget = kb;
       } catch (e) {
         /* ignore empty bounds */
       }
     }
 
-    map.fitBounds(bounds, {
-      paddingTopLeft: [48, 48],
-      paddingBottomRight: [48, 48],
+    map.fitBounds(fitTarget, {
+      padding: [40, 40],
       maxZoom: 11,
     });
 
