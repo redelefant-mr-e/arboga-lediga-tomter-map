@@ -237,11 +237,20 @@ body.arboga-tomter-embed {
   font-size: 16px;
   font-weight: 700;
   line-height: 1;
-  color: var(--arboga-text-primary);
+  color: #000000;
   white-space: nowrap;
   text-decoration: none;
   pointer-events: auto;
   z-index: 2;
+}
+
+.arboga-map-marker__label:link,
+.arboga-map-marker__label:visited,
+.arboga-map-marker__label:hover,
+.arboga-map-marker__label:active,
+.arboga-map-marker__label:focus-visible {
+  color: #000000;
+  text-decoration: none;
 }
 
 .arboga-map-marker--top-left .arboga-map-marker__label,
