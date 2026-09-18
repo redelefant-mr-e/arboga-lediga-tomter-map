@@ -109,7 +109,7 @@
         weight: 0,
         opacity: 0,
         fillColor: BRAND_PRIMARY,
-        fillOpacity: 0.12,
+        fillOpacity: 0.2,
         stroke: false,
       },
     }).addTo(map);
