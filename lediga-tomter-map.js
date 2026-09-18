@@ -91,10 +91,10 @@
       interactive: false,
       style: {
         color: BRAND_PRIMARY,
-        weight: 0.5,
-        opacity: 0.35,
+        weight: 0,
+        opacity: 0,
         fillColor: BRAND_PRIMARY,
-        fillOpacity: 0.42,
+        fillOpacity: 0.55,
       },
     }).addTo(map);
   }
@@ -105,10 +105,10 @@
       interactive: false,
       style: {
         color: BRAND_PRIMARY,
-        weight: 2,
-        opacity: 0.55,
+        weight: 2.5,
+        opacity: 0.7,
         fillColor: BRAND_PRIMARY,
-        fillOpacity: 0.08,
+        fillOpacity: 0.1,
         lineJoin: "round",
         lineCap: "round",
       },
