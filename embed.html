@@ -2,27 +2,13 @@
 <!--
   Arboga Lediga Tomter Map — embed shell
 
-  Embed options
-  -------------
-  1) iframe (recommended for Webflow Custom Code / Embed):
-     Desktop:
-     <iframe
-       src="https://redelefant-mr-e.github.io/arboga-lediga-tomter-map/embed.html"
-       title="Karta över lediga tomter i Arboga"
-       style="width:100%;height:600px;border:0;"
-       loading="lazy"
-     ></iframe>
-
-     Mobile (map + list needs more height, e.g.):
-     style="width:100%;min-height:900px;height:100vh;border:0;"
-
-  2) Inline Webflow Embed:
-     Paste the <link> tags for Leaflet + this CSS, the map markup below,
-     then Leaflet JS + lediga-tomter-map.js. Host areas.json next to the JS
-     (or set data-areas-url on the root to an absolute URL).
-
-  Assets in this folder:
-    embed.html | index.html | lediga-tomter-map.css | lediga-tomter-map.js | areas.json
+  iframe (Webflow):
+  <iframe
+    src="https://redelefant-mr-e.github.io/arboga-lediga-tomter-map/embed.html"
+    title="Karta över lediga tomter i Arboga"
+    style="width:100%;height:600px;border:0;"
+    loading="lazy"
+  ></iframe>
 -->
 <html lang="sv">
   <head>
@@ -42,25 +28,30 @@
       crossorigin=""
     />
     <link rel="stylesheet" href="lediga-tomter-map.css" />
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        overflow: hidden;
+      }
+      .arboga-tomter-map {
+        height: 100%;
+        min-height: 100%;
+      }
+    </style>
   </head>
   <body class="arboga-tomter-embed">
-    <div class="arboga-tomter-app" data-arboga-tomter-app>
-      <div
-        class="arboga-tomter-map"
-        data-arboga-tomter-map
-        role="region"
-        aria-label="Karta över lediga tomter i Arboga"
-      >
-        <div class="arboga-tomter-map__status" data-arboga-map-status>
-          Laddar karta…
-        </div>
-        <div class="arboga-tomter-map__canvas" data-arboga-map-canvas></div>
+    <div
+      class="arboga-tomter-map"
+      data-arboga-tomter-map
+      role="region"
+      aria-label="Karta över lediga tomter i Arboga"
+    >
+      <div class="arboga-tomter-map__status" data-arboga-map-status>
+        Laddar karta…
       </div>
-      <nav
-        class="arboga-tomter-list"
-        data-arboga-tomter-list
-        aria-label="Lediga tomter områden"
-      ></nav>
+      <div class="arboga-tomter-map__canvas" data-arboga-map-canvas></div>
     </div>
 
     <script

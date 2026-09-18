@@ -184,8 +184,7 @@ body.arboga-tomter-embed {
     0 8px 28px rgba(3, 30, 47, 0.18);
 }
 
-.arboga-map-marker__corner,
-.arboga-tomter-list__corner {
+.arboga-map-marker__corner {
   position: absolute;
   top: 0;
   right: 0;
@@ -195,15 +194,13 @@ body.arboga-tomter-embed {
   pointer-events: none;
 }
 
-.arboga-map-marker__corner svg,
-.arboga-tomter-list__corner svg {
+.arboga-map-marker__corner svg {
   display: block;
   width: 100%;
   height: 100%;
 }
 
-.arboga-map-marker__name,
-.arboga-tomter-list__name {
+.arboga-map-marker__name {
   display: block;
   width: 100%;
   padding-right: 28px;
@@ -215,8 +212,7 @@ body.arboga-tomter-embed {
   white-space: nowrap;
 }
 
-.arboga-map-marker__blurb,
-.arboga-tomter-list__blurb {
+.arboga-map-marker__blurb {
   display: block;
   width: 100%;
   font-family: var(--arboga-font-body);
@@ -224,6 +220,34 @@ body.arboga-tomter-embed {
   font-weight: 400;
   line-height: var(--arboga-card-body-lh);
   color: var(--arboga-text-secondary);
+}
+
+/* Tiny mobile name label — Figma 6047:6563; hidden on desktop */
+.arboga-map-marker__label {
+  display: none;
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 12px 8px;
+  background: var(--arboga-surface);
+  border-radius: 0;
+  box-shadow: var(--arboga-shadow);
+  font-family: var(--arboga-font-heading);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--arboga-text-primary);
+  white-space: nowrap;
+  text-decoration: none;
+  pointer-events: auto;
+  z-index: 2;
+}
+
+.arboga-map-marker--top-left .arboga-map-marker__label,
+.arboga-map-marker--bottom-left .arboga-map-marker__label {
+  left: auto;
+  right: 12px;
 }
 
 /* Label placement relative to dot center */
@@ -265,51 +289,9 @@ body.arboga-tomter-embed {
   display: none;
 }
 
-/* Mobile list — Figma 6046:6562; hidden on desktop */
-.arboga-tomter-list {
-  display: none;
-  flex-direction: column;
-  align-items: stretch;
-  width: 100%;
-  background: var(--arboga-surface);
-}
-
-.arboga-tomter-list__item {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--arboga-card-gap);
-  width: 100%;
-  padding: var(--arboga-card-pad-y) var(--arboga-card-pad-right)
-    var(--arboga-card-pad-y) var(--arboga-card-pad-left);
-  background: var(--arboga-surface);
-  text-decoration: none;
-  color: inherit;
-  overflow: clip;
-}
-
-.arboga-tomter-list__item:hover .arboga-tomter-list__corner,
-.arboga-tomter-list__item:focus-visible .arboga-tomter-list__corner {
-  color: var(--arboga-brand-accent-hover);
-}
-
-.arboga-tomter-list__item:focus-visible {
-  outline: 2px solid var(--arboga-brand-accent);
-  outline-offset: -2px;
-}
-
-.arboga-tomter-list__name {
-  white-space: normal;
-}
-
 @media (max-width: 599px) {
-  body.arboga-tomter-embed {
-    overflow: auto;
-  }
-
   .arboga-tomter-map {
-    height: 55vh;
+    height: 100%;
     min-height: 360px;
   }
 
@@ -317,7 +299,7 @@ body.arboga-tomter-embed {
     display: none;
   }
 
-  .arboga-tomter-list {
-    display: flex;
+  .arboga-map-marker__label {
+    display: block;
   }
 }

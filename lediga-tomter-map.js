@@ -1,6 +1,6 @@
 /**
  * Arboga Lediga Tomter Map
- * Desktop: map cards. Mobile (<600px): dots + list below map.
+ * Desktop: map cards. Mobile (<600px): dots + tiny name labels.
  */
 (function () {
   "use strict";
@@ -44,6 +44,11 @@
       escapeHtml(offset) +
       '">' +
       '<div class="arboga-map-marker__dot" aria-hidden="true"></div>' +
+      '<a class="arboga-map-marker__label" href="' +
+      escapeHtml(area.href) +
+      '" target="_blank" rel="noopener noreferrer">' +
+      escapeHtml(area.name) +
+      "</a>" +
       '<a class="arboga-map-marker__card" href="' +
       escapeHtml(area.href) +
       '" target="_blank" rel="noopener noreferrer" aria-label="Mer information om ' +
@@ -61,29 +66,6 @@
       "</a>" +
       "</div>"
     );
-  }
-
-  function listItemHtml(area) {
-    return (
-      '<a class="arboga-tomter-list__item" href="' +
-      escapeHtml(area.href) +
-      '" target="_blank" rel="noopener noreferrer">' +
-      '<span class="arboga-tomter-list__corner" aria-hidden="true">' +
-      CORNER_SVG +
-      "</span>" +
-      '<span class="arboga-tomter-list__name">' +
-      escapeHtml(area.name) +
-      "</span>" +
-      (area.blurb
-        ? '<span class="arboga-tomter-list__blurb">' + escapeHtml(area.blurb) + "</span>"
-        : "") +
-      "</a>"
-    );
-  }
-
-  function renderList(listEl, areas) {
-    if (!listEl) return;
-    listEl.innerHTML = areas.map(listItemHtml).join("");
   }
 
   function createMarker(area) {
@@ -230,11 +212,6 @@
       return;
     }
 
-    var app = root.closest("[data-arboga-tomter-app]") || root.parentElement;
-    var listEl = app
-      ? app.querySelector("[data-arboga-tomter-list]")
-      : document.querySelector("[data-arboga-tomter-list]");
-
     var areasUrl = resolveUrl(root, "data-areas-url", "areas.json");
     var kommunUrl = resolveUrl(root, "data-kommun-url", "arboga-kommun.geojson");
     var waterUrl = resolveUrl(root, "data-water-url", "arboga-water.geojson");
@@ -258,7 +235,6 @@
           throw new Error("Inga områden att visa");
         }
         hideStatus(root);
-        renderList(listEl, areas);
         initMap(root, areas, kommun, water);
       })
       .catch(function (err) {
