@@ -1,6 +1,6 @@
 /**
  * Arboga Lediga Tomter Map
- * Desktop-first Leaflet embed. Areas from areas.json.
+ * Desktop: map cards. Mobile (<600px): dots + list below map.
  */
 (function () {
   "use strict";
@@ -13,6 +13,7 @@
   var BRAND_PRIMARY = "#031e2f";
   var WATER_FILL = "#031e2f";
   var ARBOGA_CENTRUM = [59.3939, 15.8388];
+  var MOBILE_MQ = "(max-width: 599px)";
   var SCRIPT_BASE = (function () {
     var script = document.currentScript;
     if (script && script.src) {
@@ -60,6 +61,29 @@
       "</a>" +
       "</div>"
     );
+  }
+
+  function listItemHtml(area) {
+    return (
+      '<a class="arboga-tomter-list__item" href="' +
+      escapeHtml(area.href) +
+      '" target="_blank" rel="noopener noreferrer">' +
+      '<span class="arboga-tomter-list__corner" aria-hidden="true">' +
+      CORNER_SVG +
+      "</span>" +
+      '<span class="arboga-tomter-list__name">' +
+      escapeHtml(area.name) +
+      "</span>" +
+      (area.blurb
+        ? '<span class="arboga-tomter-list__blurb">' + escapeHtml(area.blurb) + "</span>"
+        : "") +
+      "</a>"
+    );
+  }
+
+  function renderList(listEl, areas) {
+    if (!listEl) return;
+    listEl.innerHTML = areas.map(listItemHtml).join("");
   }
 
   function createMarker(area) {
@@ -115,6 +139,22 @@
     }).addTo(map);
   }
 
+  function bindBreakpointResize(map) {
+    if (!window.matchMedia) return;
+    var mql = window.matchMedia(MOBILE_MQ);
+    var onChange = function () {
+      setTimeout(function () {
+        map.invalidateSize();
+      }, 50);
+    };
+    if (typeof mql.addEventListener === "function") {
+      mql.addEventListener("change", onChange);
+    } else if (typeof mql.addListener === "function") {
+      mql.addListener(onChange);
+    }
+    window.addEventListener("resize", onChange);
+  }
+
   function initMap(root, areas, kommunGeojson, waterGeojson) {
     var canvas = root.querySelector("[data-arboga-map-canvas]");
     if (!canvas) {
@@ -166,6 +206,8 @@
       map.invalidateSize();
     }, 100);
 
+    bindBreakpointResize(map);
+
     root._arbogaMap = map;
     return map;
   }
@@ -187,6 +229,11 @@
       showStatus(root, "Kartbiblioteket kunde inte laddas.");
       return;
     }
+
+    var app = root.closest("[data-arboga-tomter-app]") || root.parentElement;
+    var listEl = app
+      ? app.querySelector("[data-arboga-tomter-list]")
+      : document.querySelector("[data-arboga-tomter-list]");
 
     var areasUrl = resolveUrl(root, "data-areas-url", "areas.json");
     var kommunUrl = resolveUrl(root, "data-kommun-url", "arboga-kommun.geojson");
@@ -211,6 +258,7 @@
           throw new Error("Inga områden att visa");
         }
         hideStatus(root);
+        renderList(listEl, areas);
         initMap(root, areas, kommun, water);
       })
       .catch(function (err) {

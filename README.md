@@ -5,9 +5,16 @@ Embeddable Leaflet map for Arboga’s lediga tomter areas (Hällarna, Medåker, 
 **Live embed URL (GitHub Pages):**  
 https://redelefant-mr-e.github.io/arboga-lediga-tomter-map/embed.html
 
+## Layout
+
+- **Desktop (≥600px):** map with red dots + floating area cards  
+- **Mobile (&lt;600px):** map with red dots only + full-width area list below the map
+
 ## Webflow embed
 
 Add an **Embed** element (or Custom Code) and paste:
+
+**Desktop-oriented iframe**
 
 ```html
 <iframe
@@ -19,7 +26,19 @@ Add an **Embed** element (or Custom Code) and paste:
 ></iframe>
 ```
 
-Adjust `height` to match your section.
+**Mobile-friendly iframe** (map + list needs more height)
+
+```html
+<iframe
+  src="https://redelefant-mr-e.github.io/arboga-lediga-tomter-map/embed.html"
+  title="Karta över lediga tomter i Arboga"
+  style="width:100%;min-height:900px;height:100vh;border:0;"
+  loading="lazy"
+  referrerpolicy="no-referrer-when-downgrade"
+></iframe>
+```
+
+Or use one taller height that works for both breakpoints (e.g. `min-height: 900px`).
 
 ## Local preview
 
@@ -33,8 +52,8 @@ python3 -m http.server 8765
 | File | Role |
 | --- | --- |
 | `embed.html` | iframe entry |
-| `index.html` | same full-bleed preview |
-| `lediga-tomter-map.js` / `.css` | map + markers |
+| `index.html` | same preview |
+| `lediga-tomter-map.js` / `.css` | map + markers + mobile list |
 | `areas.json` | area names, coords, links |
 | `fonts/` | Larken (Bold + Regular) |
 

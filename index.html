@@ -17,30 +17,25 @@
       crossorigin=""
     />
     <link rel="stylesheet" href="lediga-tomter-map.css" />
-    <style>
-      html,
-      body {
-        margin: 0;
-        height: 100%;
-        overflow: hidden;
-      }
-      .arboga-tomter-map {
-        height: 100%;
-        min-height: 100%;
-      }
-    </style>
   </head>
-  <body>
-    <div
-      class="arboga-tomter-map"
-      data-arboga-tomter-map
-      role="region"
-      aria-label="Karta över lediga tomter i Arboga"
-    >
-      <div class="arboga-tomter-map__status" data-arboga-map-status>
-        Laddar karta…
+  <body class="arboga-tomter-embed">
+    <div class="arboga-tomter-app" data-arboga-tomter-app>
+      <div
+        class="arboga-tomter-map"
+        data-arboga-tomter-map
+        role="region"
+        aria-label="Karta över lediga tomter i Arboga"
+      >
+        <div class="arboga-tomter-map__status" data-arboga-map-status>
+          Laddar karta…
+        </div>
+        <div class="arboga-tomter-map__canvas" data-arboga-map-canvas></div>
       </div>
-      <div class="arboga-tomter-map__canvas" data-arboga-map-canvas></div>
+      <nav
+        class="arboga-tomter-list"
+        data-arboga-tomter-list
+        aria-label="Lediga tomter områden"
+      ></nav>
     </div>
 
     <script
