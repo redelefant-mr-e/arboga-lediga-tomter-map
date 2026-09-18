@@ -1,0 +1,29 @@
+[
+  {
+    "id": "hallarna",
+    "name": "Hällarna",
+    "blurb": "Sjönära och lantligt 15 kilometer söder om Arboga centrum",
+    "lat": 59.2739,
+    "lng": 15.8551,
+    "href": "https://arboga.se/bygga-bo-och-miljo/lediga-tomter/hallarna.html",
+    "labelOffset": "top-right"
+  },
+  {
+    "id": "medaker",
+    "name": "Medåker",
+    "blurb": "Naturnära och lantligt 10 kilometer norr om Arboga centrum",
+    "lat": 59.45444,
+    "lng": 15.75444,
+    "href": "https://arboga.se/bygga-bo-och-miljo/lediga-tomter/medaker.html",
+    "labelOffset": "bottom-left"
+  },
+  {
+    "id": "sodra-brattberget",
+    "name": "Södra Brattberget",
+    "blurb": "Centralt 2 kilometer söder om Arboga centrum",
+    "lat": 59.3815,
+    "lng": 15.8483,
+    "href": "https://arboga.se/bygga-bo-och-miljo/lediga-tomter/sodra-brattberget.html",
+    "labelOffset": "top-right"
+  }
+]

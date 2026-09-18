@@ -1,0 +1,256 @@
+/* Arboga Lediga Tomter Map — desktop-first (mobile layout deferred) */
+
+@font-face {
+  font-family: "Larken";
+  src: url("fonts/Larken-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Larken";
+  src: url("fonts/Larken-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --arboga-brand-primary: #031e2f;
+  --arboga-brand-accent: #da291c;
+  --arboga-brand-accent-hover: #961c13;
+  --arboga-text-primary: #000000;
+  --arboga-text-secondary: #495057;
+  --arboga-surface: #ffffff;
+  --arboga-map-gray: #b9bec0;
+  --arboga-gray-50: #f2f2f2;
+  --arboga-shadow: 0 4px 20px rgba(3, 30, 47, 0.14), 0 1px 3px rgba(3, 30, 47, 0.08);
+  --arboga-font-heading: "Larken", Georgia, "Times New Roman", serif;
+  --arboga-font-body: Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --arboga-map-height: 600px;
+  --arboga-dot-size: 14px;
+  /* Figma 6043:6525 */
+  --arboga-card-pad-y: 20px;
+  --arboga-card-pad-left: 16px;
+  --arboga-card-pad-right: 24px;
+  --arboga-card-gap: 12px;
+  --arboga-card-title-size: 20px;
+  --arboga-card-title-lh: 32px;
+  --arboga-card-body-size: 10px;
+  --arboga-card-body-lh: 14px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+/* Embed / map shell — full-bleed, no corner radius */
+.arboga-tomter-map {
+  position: relative;
+  width: 100%;
+  height: var(--arboga-map-height);
+  min-height: 480px;
+  border-radius: 0;
+  overflow: hidden;
+  background: var(--arboga-map-gray);
+  font-family: var(--arboga-font-body);
+}
+
+.arboga-tomter-map__canvas {
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.arboga-tomter-map .leaflet-container {
+  font-family: var(--arboga-font-body);
+  background: var(--arboga-map-gray);
+}
+
+/*
+  Basemap: #B9BEC0 + white (no violet tint).
+  Full grayscale keeps roads/labels readable as white/light gray.
+*/
+.arboga-tomter-map .leaflet-tile-pane {
+  filter: grayscale(1) contrast(0.9) brightness(1.06);
+}
+
+.arboga-tomter-map .leaflet-control-attribution {
+  font-size: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--arboga-text-secondary);
+}
+
+.arboga-tomter-map .leaflet-control-attribution a {
+  color: var(--arboga-text-primary);
+}
+
+.arboga-tomter-map .leaflet-bar a {
+  color: var(--arboga-text-primary);
+  border-bottom-color: #d9d9d9;
+}
+
+.arboga-tomter-map .leaflet-bar a:hover {
+  background: var(--arboga-gray-50);
+  color: var(--arboga-brand-accent);
+}
+
+.arboga-tomter-map .leaflet-div-icon.arboga-map-marker-icon {
+  background: transparent;
+  border: none;
+  overflow: visible !important;
+}
+
+/* Red dot + Figma card marker */
+.arboga-map-marker {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.arboga-map-marker__dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: var(--arboga-dot-size);
+  height: var(--arboga-dot-size);
+  border-radius: 50%;
+  background: var(--arboga-brand-accent);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.95),
+    0 2px 6px rgba(3, 30, 47, 0.28);
+  pointer-events: auto;
+  z-index: 1;
+}
+
+/* Figma Container 6043:6525 */
+.arboga-map-marker__card {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--arboga-card-gap);
+  width: max-content;
+  min-width: 234px;
+  max-width: none;
+  padding: var(--arboga-card-pad-y) var(--arboga-card-pad-right)
+    var(--arboga-card-pad-y) var(--arboga-card-pad-left);
+  background: var(--arboga-surface);
+  border-radius: 0;
+  box-shadow: var(--arboga-shadow);
+  text-decoration: none;
+  color: inherit;
+  pointer-events: auto;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  z-index: 2;
+}
+
+.arboga-map-marker__card:hover,
+.arboga-map-marker__card:focus-visible {
+  box-shadow: 0 8px 28px rgba(3, 30, 47, 0.18), 0 2px 6px rgba(3, 30, 47, 0.1);
+  transform: translateY(-2px);
+  outline: none;
+}
+
+.arboga-map-marker__card:focus-visible {
+  box-shadow: 0 0 0 2px var(--arboga-surface), 0 0 0 4px var(--arboga-brand-accent),
+    0 8px 28px rgba(3, 30, 47, 0.18);
+}
+
+.arboga-map-marker__corner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 32px;
+  height: 37px;
+  color: var(--arboga-brand-accent);
+  pointer-events: none;
+}
+
+.arboga-map-marker__corner svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.arboga-map-marker__name {
+  display: block;
+  width: 100%;
+  padding-right: 28px;
+  font-family: var(--arboga-font-heading);
+  font-size: var(--arboga-card-title-size);
+  font-weight: 700;
+  line-height: var(--arboga-card-title-lh);
+  color: var(--arboga-text-primary);
+  white-space: nowrap;
+}
+
+.arboga-map-marker__blurb {
+  display: block;
+  width: 100%;
+  font-family: var(--arboga-font-body);
+  font-size: var(--arboga-card-body-size);
+  font-weight: 400;
+  line-height: var(--arboga-card-body-lh);
+  color: var(--arboga-text-secondary);
+}
+
+/* Label placement relative to dot center */
+.arboga-map-marker--top-right .arboga-map-marker__card {
+  left: 14px;
+  bottom: 12px;
+}
+
+.arboga-map-marker--top-left .arboga-map-marker__card {
+  right: 14px;
+  bottom: 12px;
+}
+
+.arboga-map-marker--bottom-right .arboga-map-marker__card {
+  left: 14px;
+  top: 12px;
+}
+
+.arboga-map-marker--bottom-left .arboga-map-marker__card {
+  right: 14px;
+  top: 12px;
+}
+
+.arboga-tomter-map__status {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--arboga-text-secondary);
+  background: var(--arboga-map-gray);
+  z-index: 10;
+}
+
+.arboga-tomter-map__status[hidden] {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .arboga-tomter-map {
+    height: 70vh;
+    min-height: 360px;
+  }
+}
